@@ -1,0 +1,30 @@
+resources:
+
+- name: godog_test
+  type: git
+  source:
+    uri: https://github.com/godog_test.git
+    username: danieljamesrees
+    git_config:
+    - name: user.email
+      value: daniel.james.rees.finkit@gmail.com
+    - name: user.name
+      value: FINkit
+
+jobs:
+
+- name: test_jenkins_job
+  serial: true
+  plan:
+  - get: a_service_ci_source
+    trigger: true
+  - task: test_jenkins_task
+    config:
+      platform: linux
+      inputs:
+      - name: godog_test
+      image_resource:
+        type: docker-image
+        source: { repository: 'datacore/alpine-golang', version: '1.9' }
+      run:
+        path: godog_test/ci/scripts/test_jenkins.sh
