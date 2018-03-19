@@ -7,14 +7,14 @@ import (
     "github.com/DATA-DOG/godog"
 )
 
-func thereAreGodogs(available int) error {
+func jenkinsInstalled(jenkinsUrl string) error {
     pingOutput = ""
     return nil
 }
 
-func iPingJenkinsUrl(string jenkinsUrl) error {
+func iPingJenkinsUrl(jenkinsUrl string) error {
     if jenkinsUrl is invalid {
-        return fmt.Errorf("Jenkins URL %d is invalid", jenkinsUrl)
+        return fmt.Errorf("Jenkins URL %v is invalid", jenkinsUrl)
     }
     pingOutput = "something"
     return nil
@@ -22,13 +22,13 @@ func iPingJenkinsUrl(string jenkinsUrl) error {
 
 func itShouldBeUnlocked error {
     if pingOutput != remaining {
-        return fmt.Errorf("Jenkins is still locked according to %d", pingOutput)
+        return fmt.Errorf("Jenkins is still locked according to %v", pingOutput)
     }
     return nil
 }
 
 func FeatureContext(suite *godog.Suite) {
-    suite.Step(`^Jenkins is installed at (\d+)$`, jenkinsInstalled)
+    suite.Step(`^Jenkins is installed at (\v+)$`, jenkinsInstalled)
     suite.Step(`^I ping its URL$`, iPingJenkinsURL)
     suite.Step(`^it should be unlocked$`, itShouldBeUnlocked)
 
