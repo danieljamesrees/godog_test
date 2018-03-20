@@ -3,36 +3,50 @@ package main
 
 import (
     "fmt"
-
     "github.com/DATA-DOG/godog"
+    "io/ioutil"
+    "net.url"
+    "strings"
 )
 
-func jenkinsInstalled(jenkinsUrl string) error {
-    pingOutput = ""
+func JenkinsInstalled(jenkinsUrl string) error {
+    rawJenkinsUrl = jenkinsUrl
     return nil
 }
 
-func iPingJenkinsUrl(jenkinsUrl string) error {
-    if jenkinsUrl is invalid {
-        return fmt.Errorf("Jenkins URL %v is invalid", jenkinsUrl)
+func IPingJenkins() error {
+     parsedJenkinsUrl, error := url.ParseRequestURI(rawJenkinsUrl)
+
+    if error != nil {
+        return fmt.Errorf("Jenkins URL %v is invalid", rawJenkinsUrl)
     }
-    pingOutput = "something"
+
     return nil
 }
 
-func itShouldBeUnlocked error {
-    if pingOutput != remaining {
-        return fmt.Errorf("Jenkins is still locked according to %v", pingOutput)
+func ItShouldBeUnlocked() error {
+    jenkinsResponse, error := http.Get(rawJenkinsUrl)
+
+    if error !=nil {
+        return fmt.Errorf("Failed to contact Jenkins URL %v", rawJenkinsUrl)
     }
+
+    jenkinsResponseBody, error := ioutil.ReadAll(jenkinsResponse.Body)
+    jenkinsResponse.Body.Close()
+
+    if !strings.Contains(jenkinsResponseBody, "Unlock Jenkins") {
+        return fmt.Errorf("Jenkins is still locked according to %v", jenkinsResponseBody)
+    }
+
     return nil
 }
 
 func FeatureContext(suite *godog.Suite) {
-    suite.Step(`^Jenkins is installed at (\v+)$`, jenkinsInstalled)
-    suite.Step(`^I ping its URL$`, iPingJenkinsURL)
-    suite.Step(`^it should be unlocked$`, itShouldBeUnlocked)
+    suite.Step(`^Jenkins is installed at (\v+)$`, JenkinsInstalled)
+    suite.Step(`^I ping its URL$`, IPingJenkins)
+    suite.Step(`^it should be unlocked$`, ItShouldBeUnlocked)
 
     suite.BeforeScenario(func(interface{}) {
-        pingOutput = "" // clean the state before every scenario
+        jenkinsResponse = "" // clean the state before every scenario
     })
 }
