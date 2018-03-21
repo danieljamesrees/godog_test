@@ -1,12 +1,19 @@
 #!/bin/bash -e
 
+# Typically runs as $0 test-buildstack
+
 set -o pipefail
 
-PIPELINE_NAME="${PIPELINE_NAME}"
+PIPELINE_NAME="${1}"
+
+if [ -z "${PIPELINE_NAME}" ]
+then
+    PIPELINE_NAME="$(basename $PWD)"
+fi
 
 usage()
 {
-    echo $0
+    echo $0 [YOUR_PIPELINE_NAME]
 }
 
 fail_on_error()

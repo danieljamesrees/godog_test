@@ -3,8 +3,7 @@ resources:
 - name: godog_test
   type: git
   source:
-    uri: https://github.com/godog_test.git
-    username: danieljamesrees
+    uri: https://github.com/danieljamesrees/godog_test.git
     git_config:
     - name: user.email
       value: daniel.james.rees.finkit@gmail.com
@@ -16,7 +15,7 @@ jobs:
 - name: test_jenkins_job
   serial: true
   plan:
-  - get: a_service_ci_source
+  - get: godog_test
     trigger: true
   - task: test_jenkins_task
     config:
