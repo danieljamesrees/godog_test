@@ -1,0 +1,14 @@
+#!/bin/bash -uex
+
+function vars()
+{
+  local vars
+  vars=""
+  for var in ${VARS}
+  do
+    vars="${vars} -v ${var}"
+  done
+  echo vars=${vars}
+}
+
+vars
