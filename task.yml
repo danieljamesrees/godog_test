@@ -13,4 +13,4 @@ run:
   path: godog_test/task
 
 params:
-  VARS:
+  VARS: 
