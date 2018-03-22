@@ -9,7 +9,11 @@ clean()
 
 init()
 {
-    export GOPATH="${PWD}/gosrc"
+    if [ "${GOPATH}" -ne "/go" ]
+    then
+        export GOPATH="${PWD}/gosrc"
+    fi
+
     cd ${GOPATH}
     export PATH="${GOPATH}/bin:${PATH}"
 
