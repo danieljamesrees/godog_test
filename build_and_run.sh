@@ -1,27 +1,36 @@
 #!/bin/sh -ex
 
+# Only needed locally.
 clean()
 {
-    rm --force --preserve-root --recursive bin/tests
-    rm --force --preserve-root --recursive src/github.com
+    rm --force --preserve-root --recursive gosrc/bin/tests
 }
 
 init()
 {
-    export GOPATH=$(pwd)
-    #git clone https://github.com/DATA-DOG/godog.git $GOPATH/src/buildstack/vendor/github.com/DATA-DOG/godog
-    go get github.com/DATA-DOG/godog/cmd/godog
+    export GOPATH="${PWD}/gosrc"
+    cd ${GOPATH}
+    export PATH="${GOPATH}/bin:${PATH}"
+
+    set +x
+    if ! godog --version
+    then
+        echo Installing godog
+        #git clone https://github.com/DATA-DOG/godog.git $GOPATH/src/buildstack/vendor/github.com/DATA-DOG/godog
+        go get github.com/DATA-DOG/godog/cmd/godog
+    fi
+    set -x
 
     mkdir bin/tests
 }
 
 build()
 {
-    bin/godog --format=cucumber --output bin/tests/jenkins --strict $(pwd)/src/buildstack/features/jenkins.feature
+    godog --format=cucumber --output bin/tests/jenkins --strict ${PWD}/src/buildstack/features/jenkins.feature
 }
 
 clean
 init
 build
 
-bin/tests/jenkins $(pwd)/src/buildstack/features/jenkins.feature
+bin/tests/jenkins ${PWD}/src/buildstack/features/jenkins.feature
