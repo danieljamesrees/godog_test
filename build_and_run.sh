@@ -22,7 +22,8 @@ init()
     fi
     set -x
 
-    mkdir bin/tests
+    mkdir -p bin/tests
+#    mkdir --parents bin/tests
 }
 
 build()
