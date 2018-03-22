@@ -3,7 +3,8 @@
 # Only needed locally.
 clean()
 {
-    rm --force --preserve-root --recursive gosrc/bin/tests
+    rm -rf gosrc/bin/tests
+#    rm --force --preserve-root --recursive gosrc/bin/tests
 }
 
 init()
