@@ -1,6 +1,5 @@
 #!/bin/bash -ex
 
 export TERM=dumb &&\
-export GOPATH=godog_test &&\
-cd ${GOPATH}/gosrc &&\
+cd godog_test &&\
 ./build_and_run.sh
