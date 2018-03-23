@@ -17,10 +17,6 @@ jobs:
   plan:
   - get: godog_test
     trigger: true
-  - task: read-vars
-    file: godog_test/task.yml
-    params:
-      VARS: "a=b c=d"
   - task: test_jenkins_task
     config:
       platform: linux
