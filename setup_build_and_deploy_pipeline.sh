@@ -34,12 +34,15 @@ fail_on_error()
 
 setup_credhub()
 {
-    JUMPBOX_ADDRESS=$(bbl -s ${BBL_STATE_PATH} jumpbox-address) > /tmp/${PIPELINE_NAME}.yml
-    JUMPBOX_PRIVATE_KEY=$(bbl -s ${BBL_STATE_PATH} ssh-key) >> /tmp/${PIPELINE_NAME}.yml
-    CREDHUB_USERNAME=$(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_USER) >> /tmp/${PIPELINE_NAME}.yml
+    JUMPBOX_ADDRESS=$(bbl -s ${BBL_STATE_PATH} jumpbox-address) > /tmp/${PIPELINE_NAME}-vars.yml
+    JUMPBOX_PRIVATE_KEY=$(bbl -s ${BBL_STATE_PATH} ssh-key) >> /tmp/${PIPELINE_NAME}-vars.yml
+    CREDHUB_USERNAME=$(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_USER) >> /tmp/${PIPELINE_NAME}-vars.yml
+    https_proxy=$(bbl -s ${BBL_STATE_PATH} print-env|grep BOSH_ALL_PROXY) >> /tmp/${PIPELINE_NAME}-vars.yml
 }
 
 TARGET_NAME="concourse-dev"
+
+setup_credhub
 
 echo Ensure you are logged into the correct Concourse instance using fly --target ${TARGET_NAME} login --team-name YOUR_TEAM_NAME --concourse-url CONCOURSE_EXTERNAL_URL
 echo About to start pipeline - do not quit until the smoking_pipeline Configured message is displayed or errors are identified

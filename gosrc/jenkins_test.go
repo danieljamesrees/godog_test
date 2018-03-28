@@ -59,7 +59,7 @@ func ItShouldBeUnlocked() error {
     return nil
 }
 
-func FeatureContext(suite *godog.Suite) {
+func JenkinsFeatureContext(suite *godog.Suite) {
     suite.Step(`^Jenkins is installed at (https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))$`, JenkinsIsInstalled)
     suite.Step(`^certificates are being ignored$`, CertificatesAreBeingIgnored)
     suite.Step(`^I ping its URL$`, IPingJenkins)

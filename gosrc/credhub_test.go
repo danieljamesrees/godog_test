@@ -6,11 +6,9 @@ package main
 import (
     "fmt"
     "github.com/DATA-DOG/godog"
-    "net/http"
     "net/url"
     "os"
     "os/exec"
-    "strings"
 )
 
 var rawCredHubUrl string
@@ -29,8 +27,7 @@ func CredHubIsInstalled(credHubUrl string) error {
 }
 
 func ASecretExists(secretPath string) error {
-    if (secretPath == "") // Should be enforced by the regex anyway
-    {
+    if secretPath == "" { // Should be enforced by the regex anyway
         return fmt.Errorf("A secret path under /concourse must be specified")
     }
 
@@ -39,22 +36,20 @@ func ASecretExists(secretPath string) error {
 }
 
 // Could be done within the container setup instead?
-func AccessCredHub(credHubUsername string, credHubPassword string) error {
+func AccessCredHub(credHubUsernameVariable string, credHubPasswordVariable string) error {
     var (
         commandOut []byte
         error    error
     )
 
     credHubCommand := "credhub"
-    apiArgs := []string{"api", "--server", "10.0.0.6"}
+    apiArgs := []string{"api", "--server", rawCredHubUrl}
     commandOut, error = exec.Command(credHubCommand, apiArgs...).Output()
 
     if error != nil {
-        fmt.Errorf(os.Stderr, "There was an error running the credhub api command: ", error, " - output was ", commandOut)
-    }
-    else
-    {
-        loginArgs := []string{"login", "--username", credHubUsername, "--password", credHubPassword} // --server?
+        fmt.Errorf("There was an error running the credhub api command: ", error, " - output was ", commandOut)
+    } else {
+        loginArgs := []string{"login", "--username", os.Getenv("credHubUsernameVariable"), "--password", os.Getenv("credHubPasswordVariable")} // --server?
         commandOut, error = exec.Command(credHubCommand, loginArgs...).Output()
     }
 
@@ -72,28 +67,28 @@ func SecretValueShouldBe(expectedSecretValue string) error {
     commandOut, error = exec.Command(credHubCommand, getArgs...).Output()
 
     if error != nil {
-        fmt.Errorf(os.Stderr, "There was an error running the credhub get command: ", error, " - output was ", commandOut)
-    }
-	else
-	{
+        fmt.Errorf("There was an error running the credhub get command: ", error, " - output was ", commandOut)
+    } else {
         secretValue := string(commandOut)
 
         fmt.Println("The retrieved secret value at ", secretPath, " was ", secretValue)
 
-        if (secretValue != expectedSecretValue)
-        {
+        if (secretValue != expectedSecretValue) {
             fmt.Errorf("The expected secret value was ", expectedSecretValue, ", not ", secretValue)
         }
     }
+
+    return nil
 }
 
-func FeatureContext(suite *godog.Suite) {
-    suite.Step(`^CredHub is installed at (https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*:[0-9]*))$`, CredHubIsInstalled)
+func CredHubFeatureContext(suite *godog.Suite) {
+    suite.Step(`^CredHub is installed at (https:\/\/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b:[0-9]*)$`, CredHubIsInstalled)
     suite.Step(`^a secret exists at /concourse/([-a-z0-9\/]*)$`, ASecretExists)
-    suite.Step(`^I use the CredHub CLI to access CredHub via a proxy with the username ([-a-z0-9\/]*) and password ([-a-z0-9\/]*)$`, AccessCredHub)
+    suite.Step(`^I use the CredHub CLI to access CredHub via a proxy with username \${([_-a-zA-Z0-9]*)} and password \${([_-a-zA-Z0-9]*)}$`, AccessCredHub)
     suite.Step(`^the secret value should be (.*)$`, SecretValueShouldBe)
 
     suite.BeforeScenario(func(interface{}) {
-        credHubUrl = ""
+        rawCredHubUrl = ""
+        secretPath = ""
     })
 }

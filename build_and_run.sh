@@ -2,7 +2,7 @@
 
 # Only needed locally.
 
-DEFAULT_CREDHUB_PROXY_PORT="9999"
+DEFAULT_CREDHUB_PROXY_PORT="6666"
 
 JUMPBOX_ADDRESS="${1}"
 JUMPBOX_PRIVATE_KEY="${2}"
@@ -45,7 +45,14 @@ fi
 
 if [ -z "${CREDHUB_PROXY_PORT}" ]
 then
-    CREDHUB_PROXY_PORT=${DEFAULT_CREDHUB_PROXY_PORT}
+    CREDHUB_PROXY_PORT="${DEFAULT_CREDHUB_PROXY_PORT}"
+fi
+
+if [ -z "${https_proxy}" ]
+then
+    echo Must specify the https_proxy variable
+    usage
+    exit 1
 fi
 
 clean()
@@ -56,7 +63,7 @@ clean()
 
 init()
 {
-    if [ "${GOPATH}" -ne "/go" ]
+    if [ "${GOPATH}" != "/go" ]
     then
         export GOPATH="${PWD}/gosrc"
     fi
@@ -73,7 +80,7 @@ init()
     fi
     set -x
 
-    if ! credhub --version
+    if [ ! -f /usr/local/bin/credhub ] # --version requires a server connection, when already configured
     then
         echo Installing credhub CLI
         curl --location --output credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.7.0/credhub-linux-1.7.0.tgz
@@ -81,11 +88,6 @@ init()
         rm --force credhub.tgz
         chmod u+x credhub
         sudo mv credhub /usr/local/bin/
-    fi
-
-    if [ -z "${GOPATH}" -ne "/go" ]
-    then
-        export GOPATH="${PWD}/gosrc"
     fi
 
     mkdir -p bin/tests
@@ -100,7 +102,8 @@ build()
 
 setup_credhub()
 {
-    ssh -N -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i ${JUMPBOX_PRIVATE_KEY}
+    # Will fail if the port is already open.
+    ssh -N -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i ${JUMPBOX_PRIVATE_KEY} &
     export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
 }
 

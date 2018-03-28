@@ -41,4 +41,5 @@ jobs:
           JUMPBOX_PRIVATE_KEY: ((ssh-key))
           CREDHUB_USERNAME: ((credhub_username))
           CREDHUB_PASSWORD: ((credhub_password))
-          CREDHUB_PROXY_PORT: 9999
+          CREDHUB_PROXY_PORT: ((credhub_proxy_port))
+          https_proxy: ((https_proxy))
