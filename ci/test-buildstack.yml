@@ -1,6 +1,6 @@
 resources:
 
-- name: godog_test
+- name: godog-test
   type: git
   source:
     uri: https://github.com/danieljamesrees/godog_test.git
@@ -9,21 +9,36 @@ resources:
       value: daniel.james.rees.finkit@gmail.com
     - name: user.name
       value: FINkit
+- name: buildstack-bbl-state
+  type: git
+  source:
+    uri: ((buildstack-bbl-state.uri))
+    branch: master
+    username: ((buildstack-bbl-state.username))
+    password: ((buildstack-bbl-state.password))
 
 jobs:
 
-- name: test_jenkins_job
+- name: test-jenkins-job
   serial: true
   plan:
-  - get: godog_test
+  - get: godog-test
     trigger: true
-  - task: test_jenkins_task
+  - get: buildstack-bbl-state
+  - task: test-jenkins-task
     config:
       platform: linux
       inputs:
-      - name: godog_test
+      - name: godog-test
+      - name: buildstack-bbl-state
       image_resource:
         type: docker-image
         source: { repository: 'datacore/alpine-golang', version: '1.9' }
       run:
-        path: godog_test/ci/scripts/test_jenkins.sh
+        path: godog-test/ci/scripts/test_buildstack.sh
+        params:
+          JUMPBOX_ADDRESS: ((jumpbox-address))
+          JUMPBOX_PRIVATE_KEY: ((ssh-key))
+          CREDHUB_USERNAME: ((credhub_username))
+          CREDHUB_PASSWORD: ((credhub_password))
+          CREDHUB_PROXY_PORT: 9999

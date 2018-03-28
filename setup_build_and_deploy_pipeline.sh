@@ -1,20 +1,23 @@
 #!/bin/bash -e
 
 # Typically runs as $0 test-buildstack
+# bbl must be pre-installed on the executing box.
 
 set -o pipefail
 
-PIPELINE_NAME="${1}"
-
-if [ -z "${PIPELINE_NAME}" ]
-then
-    PIPELINE_NAME="$(basename $PWD)"
-fi
+PIPELINE_NAME="godog-test" # Must match the path in Vault #"$(basename $PWD)"
 
 usage()
 {
-    echo $0 [YOUR_PIPELINE_NAME]
+    echo $0 BBL_STATE_PATH
 }
+
+if [ -z "${BBL_STATE_PATH}" ]
+then
+    echo Must specify a BBL state path
+    usage
+    exit 1
+fi
 
 fail_on_error()
 {
@@ -29,12 +32,19 @@ fail_on_error()
     fi
 }
 
+setup_credhub()
+{
+    JUMPBOX_ADDRESS=$(bbl -s ${BBL_STATE_PATH} jumpbox-address) > /tmp/${PIPELINE_NAME}.yml
+    JUMPBOX_PRIVATE_KEY=$(bbl -s ${BBL_STATE_PATH} ssh-key) >> /tmp/${PIPELINE_NAME}.yml
+    CREDHUB_USERNAME=$(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_USER) >> /tmp/${PIPELINE_NAME}.yml
+}
+
 TARGET_NAME="concourse-dev"
 
-echo Ensure you are logged into the correct Concourse instance using fly --target ${TARGET_NAME} login --team-name finkit-cpo --concourse-url CONCOURSE_EXTERNAL_URL
+echo Ensure you are logged into the correct Concourse instance using fly --target ${TARGET_NAME} login --team-name YOUR_TEAM_NAME --concourse-url CONCOURSE_EXTERNAL_URL
 echo About to start pipeline - do not quit until the smoking_pipeline Configured message is displayed or errors are identified
 
-fly --target ${TARGET_NAME} set-pipeline --pipeline ${PIPELINE_NAME} --config ci/${PIPELINE_NAME}.yml --non-interactive
+fly --target ${TARGET_NAME} set-pipeline --pipeline ${PIPELINE_NAME} --config ci/${PIPELINE_NAME}.yml --non-interactive --load-vars-from=/tmp/${PIPELINE_NAME}-vars.yml
 fail_on_error "Failed to set ${PIPELINE_NAME} pipeline"
 
 echo
@@ -48,7 +58,7 @@ echo Finished setting up pipeline
 fly --target ${TARGET_NAME} unpause-pipeline --pipeline ${PIPELINE_NAME}
 fail_on_error "Failed to unpause ${PIPELINE_NAME} pipeline"
 
-fly --target ${TARGET_NAME} trigger-job --job ${PIPELINE_NAME}/test_jenkins_job --watch
+fly --target ${TARGET_NAME} trigger-job --job ${PIPELINE_NAME}/test-jenkins-job --watch
 fail_on_error "Failed to trigger test_jenkins job"
 
 echo ${PIPELINE_NAME} Configured
