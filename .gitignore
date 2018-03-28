@@ -1,3 +1,4 @@
 gosrc/bin/
+gosrc/pkg/
 gosrc/src/buildstack/vendor/github.com/DATA-DOG
 gosrc/src/github.com/DATA-DOG
