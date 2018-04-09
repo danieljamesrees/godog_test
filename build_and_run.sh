@@ -78,7 +78,8 @@ init()
         echo Installing credhub CLI
         curl --location --output credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.7.0/credhub-linux-1.7.0.tgz
         tar -xvf credhub.tgz
-        rm --force credhub.tgz
+        rm -f credhub.tgz
+#        rm --force credhub.tgz
         chmod u+x credhub
         sudo mv credhub /usr/local/bin/
     fi
