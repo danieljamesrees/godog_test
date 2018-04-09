@@ -102,6 +102,8 @@ setup_credhub()
     # Will fail if the port is already open.
     ssh -o StrictHostKeyChecking=no -N -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}" &
     export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
+
+    eval "$(bbl -s ${BBL_STATE_PATH} print-env)"
 }
 
 clean

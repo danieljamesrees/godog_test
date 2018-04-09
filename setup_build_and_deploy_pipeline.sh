@@ -32,6 +32,7 @@ fail_on_error()
     fi
 }
 
+# TODO Get ssh-key and credhub-password from Vault
 setup_credhub()
 {
     echo "---" > /tmp/${PIPELINE_NAME}-vars.yml
@@ -73,7 +74,7 @@ echo Finished setting up pipeline
 fly --target ${TARGET_NAME} unpause-pipeline --pipeline ${PIPELINE_NAME}
 fail_on_error "Failed to unpause ${PIPELINE_NAME} pipeline"
 
-fly --target ${TARGET_NAME} trigger-job --job ${PIPELINE_NAME}/test-jenkins-job --watch
+fly --target ${TARGET_NAME} trigger-job --job ${PIPELINE_NAME}/test-buildstack-job --watch
 fail_on_error "Failed to trigger test_jenkins job"
 
 echo ${PIPELINE_NAME} Configured
