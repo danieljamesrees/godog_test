@@ -19,13 +19,13 @@ resources:
 
 jobs:
 
-- name: test-jenkins-job
+- name: test-buildstack-job
   serial: true
   plan:
   - get: godog-test
     trigger: true
   - get: buildstack-bbl-state
-  - task: test-jenkins-task
+  - task: test-buildstack-task
     config:
       platform: linux
       inputs:
