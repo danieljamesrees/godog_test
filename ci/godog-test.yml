@@ -36,10 +36,9 @@ jobs:
         source: { repository: 'datacore/alpine-golang', version: '1.9' }
       run:
         path: godog-test/ci/scripts/test_buildstack.sh
-        params:
-          JUMPBOX_ADDRESS: ((jumpbox-address))
-          JUMPBOX_PRIVATE_KEY: ((ssh-key))
-          CREDHUB_USERNAME: ((credhub_username))
-          CREDHUB_PASSWORD: ((credhub_password))
-          CREDHUB_PROXY_PORT: ((credhub_proxy_port))
-          https_proxy: ((https_proxy))
+      params:
+        JUMPBOX_ADDRESS: ((jumpbox-address))
+        JUMPBOX_PRIVATE_KEY: ((ssh-key))
+        CREDHUB_USERNAME: ((credhub-username))
+        CREDHUB_PASSWORD: ((credhub-password))
+        CREDHUB_PROXY_PORT: ((credhub-proxy-port))

@@ -34,10 +34,22 @@ fail_on_error()
 
 setup_credhub()
 {
-    JUMPBOX_ADDRESS=$(bbl -s ${BBL_STATE_PATH} jumpbox-address) > /tmp/${PIPELINE_NAME}-vars.yml
-    JUMPBOX_PRIVATE_KEY=$(bbl -s ${BBL_STATE_PATH} ssh-key) >> /tmp/${PIPELINE_NAME}-vars.yml
-    CREDHUB_USERNAME=$(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_USER) >> /tmp/${PIPELINE_NAME}-vars.yml
-    https_proxy=$(bbl -s ${BBL_STATE_PATH} print-env|grep BOSH_ALL_PROXY) >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "---" > /tmp/${PIPELINE_NAME}-vars.yml
+
+    echo "jumpbox-address: $(bbl -s ${BBL_STATE_PATH} jumpbox-address)" >> /tmp/${PIPELINE_NAME}-vars.yml
+
+    printf "ssh-key: |\n" >> /tmp/${PIPELINE_NAME}-vars.yml
+
+    while read -r line
+    do
+      echo "  ${line}" >> /tmp/${PIPELINE_NAME}-vars.yml
+    done <<< "$(bbl -s ${BBL_STATE_PATH} ssh-key)"
+
+    printf "\n" >> /tmp/${PIPELINE_NAME}-vars.yml
+
+    echo "credhub-username: $(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_USER|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "credhub-password: $(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_PASSWORD|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "credhub-proxy-port: 6666" >> /tmp/${PIPELINE_NAME}-vars.yml
 }
 
 TARGET_NAME="concourse-dev"
