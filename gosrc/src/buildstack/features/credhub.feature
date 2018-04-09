@@ -6,7 +6,7 @@ Feature: access credhub secrets
 
   @initialisation
   Scenario: Access CredHub secrets
-    Given CredHub is installed at https://10.0.0.6:8844
-    And a secret exists at /concourse/main/godog-test/ive-got-the-key
-    When I use the CredHub CLI to access CredHub via a proxy with username ${CREDHUB_USERNAME} and password ${CREDHUB_PASSWORD}
+    Given CredHub is installed at https://10.0.0.6:8844 with username ${CREDHUB_USER} and password ${CREDHUB_PASSWORD}
+    And a secret ive-got-the-secret exists at /godog-test/ive-got-the-key
+    When I use the CredHub CLI to access CredHub via a proxy
     Then the secret value should be ive-got-the-secret
