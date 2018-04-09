@@ -1,6 +1,8 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 export TERM=dumb &&\
 cp -r godog-test/gosrc/* ${GOPATH} &&\
 cd godog-test &&\
-./build_and_run.sh "${JUMPBOX_ADDRESS}" "${JUMPBOX_PRIVATE_KEY}" "${CREDHUB_USERNAME}" "${CREDHUB_PASSWORD}" "${CREDHUB_PROXY_PORT}"
+echo "${JUMPBOX_PRIVATE_KEY}" > /tmp/jumpbox.key
+./build_and_run.sh "${JUMPBOX_ADDRESS}" /tmp/jumpbox.key "${CREDHUB_USERNAME}" "${CREDHUB_PASSWORD}" "${CREDHUB_PROXY_PORT}"
+rm > /tmp/jumpbox.key
