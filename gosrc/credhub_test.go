@@ -16,6 +16,23 @@ var secretPath string
 var usernameVariable string
 var passwordVariable string
 
+//http://craigwickesser.com/2015/02/golang-cmd-with-custom-environment/
+//func ExecViaBoshProxy(command *string, args *[]string) (string, error) {
+//    var (
+//        commandOut []byte
+//        commandStdout bytes.Buffer
+//        error error
+//    )
+//
+//    commandExec = exec.Command(*command, *args...).CombinedOutput()
+//    environ := os.Environ()
+//    environ = append(environ, "https_proxy=${BOSH_ALL_PROXY}")
+//    commandExec.Env = environ
+//    commandExec.Stdin = bytes.NewBuffer(commandOut)
+//    commandExec.Stdout = &commandStdout
+//    error = command.Run()
+//}
+
 func LoginToCredHub() error {
     var (
         commandOut []byte
@@ -90,7 +107,7 @@ func ASecretExists(expectedSecretValue, credHubSecretPath string) error {
     var (
         commandOut []byte
     )
-
+//credHubApiBaseContextPath 
     credHubCommand := "credhub"
     setArgs := []string{"set", "--name=" + secretPath, "--value=" + expectedSecretValue, "--type=value"}
 //    fmt.Fprint(os.Stdout, "Setting secret ", expectedSecretValue, " at path ", secretPath, " using command arguments: ", setArgs, "\n")
@@ -116,7 +133,7 @@ func SecretValueShouldBe(expectedSecretValue string) error {
     var (
         credHubCommandOut []byte
         jqCommandOut []byte
-	    jqStdout bytes.Buffer
+        jqStdout bytes.Buffer
         error error
     )
 
@@ -154,7 +171,7 @@ func SecretValueShouldBe(expectedSecretValue string) error {
 func CredHubFeatureContext(suite *godog.Suite) {
     suite.Step(`^CredHub is installed at (https:\/\/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b:[0-9]*) with username \${([_-a-zA-Z0-9]*)} and password \${([_-a-zA-Z0-9]*)}$`, CredHubIsInstalled)
     suite.Step(`^a secret (.*) exists at ([-a-z0-9\/]*)$`, ASecretExists)
-    suite.Step(`^I use the CredHub CLI to access CredHub via a proxy$`, AccessCredHub)
+    suite.Step(`^I use the CredHub REST API to access CredHub via a proxy$`, AccessCredHub)
     suite.Step(`^the secret value should be (.*)$`, SecretValueShouldBe)
 
     suite.BeforeScenario(func(interface{}) {

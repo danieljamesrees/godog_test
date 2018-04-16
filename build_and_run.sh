@@ -1,7 +1,5 @@
 #!/bin/sh -ex
 
-# https_proxy must not be set
-
 DEFAULT_CREDHUB_PROXY_PORT="6666"
 
 JUMPBOX_ADDRESS="${1}"
@@ -84,8 +82,6 @@ init()
         sudo mv credhub /usr/local/bin/
     fi
 
-#    export https_proxy=${BOSH_ALL_PROXY}
-
     mkdir -p bin/tests
 #    mkdir --parents bin/tests
 }
@@ -100,8 +96,9 @@ build()
 setup_credhub()
 {
     # Will fail if the port is already open.
-    ssh -o StrictHostKeyChecking=no -N -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}" &
-    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
+#    ssh -o StrictHostKeyChecking=no -N -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}" &
+#    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
+    export https_proxy=${BOSH_ALL_PROXY}
 }
 
 clean
