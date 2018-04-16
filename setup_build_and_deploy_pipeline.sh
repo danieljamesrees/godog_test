@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 # Typically runs as $0 test-buildstack
-# bbl must be pre-installed on the executing box.
 
 set -o pipefail
 

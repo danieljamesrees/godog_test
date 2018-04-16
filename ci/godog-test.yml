@@ -42,3 +42,4 @@ jobs:
         CREDHUB_USERNAME: ((credhub-username))
         CREDHUB_PASSWORD: ((credhub-password))
         CREDHUB_PROXY_PORT: ((credhub-proxy-port))
+        BOSH_ALL_PROXY: "socks5://localhost:36809"

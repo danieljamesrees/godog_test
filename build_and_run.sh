@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 DEFAULT_CREDHUB_PROXY_PORT="6666"
 
