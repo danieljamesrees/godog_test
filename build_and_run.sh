@@ -95,10 +95,13 @@ build()
 # Hopefully this proxy configuration can eventually be removed if CredHub can be made accessible from Concourse.
 setup_credhub()
 {
+    curl --location --output credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.7.0/credhub-linux-1.7.0.tgz
     # Will fail if the port is already open.
-#    ssh -o StrictHostKeyChecking=no -N -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}" &
+##    ssh -o StrictHostKeyChecking=no -fNnL "$CREDHUB_PROXY_PORT:$JUMPBOX_ADDRESS:$CREDHUB_PROXY_PORT" -i "$JUMPBOX_PRIVATE_KEY" "jumpbox@$JUMPBOX_ADDRESS"
+#    ssh -o StrictHostKeyChecking=no -fN -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}"
+      trap "pkill ssh" EXIT
 #    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
-    export https_proxy=${BOSH_ALL_PROXY}
+#    export https_proxy=${BOSH_ALL_PROXY}
 }
 
 clean
