@@ -3,14 +3,11 @@
 DEFAULT_CREDHUB_PROXY_PORT="6666"
 
 JUMPBOX_ADDRESS="${1}"
-JUMPBOX_PRIVATE_KEY="${2}"
-CREDHUB_USERNAME="${3}"
-CREDHUB_PASSWORD="${4}"
-CREDHUB_PROXY_PORT="${5}"
+CREDHUB_PROXY_PORT="${2}"
 
 usage()
 {
-    echo $0 JUMPBOX_ADDRESS JUMPBOX_PRIVATE_KEY CREDHUB_USERNAME CREDHUB_PASSWORD [CREDHUB_PROXY_PORT]
+    echo $0 JUMPBOX_ADDRESS [CREDHUB_PROXY_PORT]
 }
 
 if [ -z "${JUMPBOX_ADDRESS}" ]
@@ -27,7 +24,7 @@ then
     exit 1
 fi
 
-if [ -z "${CREDHUB_USERNAME}" ]
+if [ -z "${CREDHUB_USER}" ]
 then
     echo Must specify a CredHub username
     usage
@@ -74,12 +71,14 @@ init()
     if [ ! -f /usr/local/bin/credhub ] # --version requires a server connection, when already configured
     then
         echo Installing credhub CLI
-        curl --location --output credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.7.0/credhub-linux-1.7.0.tgz
+        curl --location --output credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.6.0/credhub-linux-1.6.0.tgz
         tar -xvf credhub.tgz
         rm -f credhub.tgz
 #        rm --force credhub.tgz
         chmod u+x credhub
         sudo mv credhub /usr/local/bin/
+    else
+        echo Credhub already installed - delete /usr/local/bin/credhub to replace
     fi
 
     mkdir -p bin/tests
@@ -95,13 +94,12 @@ build()
 # Hopefully this proxy configuration can eventually be removed if CredHub can be made accessible from Concourse.
 setup_credhub()
 {
-    curl --location --output credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.7.0/credhub-linux-1.7.0.tgz
     # Will fail if the port is already open.
 ##    ssh -o StrictHostKeyChecking=no -fNnL "$CREDHUB_PROXY_PORT:$JUMPBOX_ADDRESS:$CREDHUB_PROXY_PORT" -i "$JUMPBOX_PRIVATE_KEY" "jumpbox@$JUMPBOX_ADDRESS"
 #    ssh -o StrictHostKeyChecking=no -fN -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}"
-      trap "pkill ssh" EXIT
+#      trap "pkill ssh" EXIT
 #    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
-#    export https_proxy=${BOSH_ALL_PROXY}
+    export https_proxy=${BOSH_ALL_PROXY}
 }
 
 clean
