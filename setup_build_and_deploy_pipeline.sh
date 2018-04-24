@@ -36,19 +36,20 @@ setup_credhub()
 {
     echo "---" > /tmp/${PIPELINE_NAME}-vars.yml
 
-    echo "jumpbox-address: $(bbl -s ${BBL_STATE_PATH} jumpbox-address)" >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "jumpbox-address: $(bbl --state-dir ${BBL_STATE_PATH} jumpbox-address)" >> /tmp/${PIPELINE_NAME}-vars.yml
 
     printf "ssh-key: |\n" >> /tmp/${PIPELINE_NAME}-vars.yml
 
     while read -r line
     do
       echo "  ${line}" >> /tmp/${PIPELINE_NAME}-vars.yml
-    done <<< "$(bbl -s ${BBL_STATE_PATH} ssh-key)"
+    done <<< "$(bbl --state-dir ${BBL_STATE_PATH} ssh-key)"
 
     printf "\n" >> /tmp/${PIPELINE_NAME}-vars.yml
 
-    echo "credhub-username: $(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_USER|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
-    echo "credhub-password: $(bbl -s ${BBL_STATE_PATH} print-env|grep CREDHUB_PASSWORD|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "credhub-server: $(bbl --state-dir ${BBL_STATE_PATH} print-env|grep CREDHUB_SERVER|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "credhub-username: $(bbl --state-dir ${BBL_STATE_PATH} print-env|grep CREDHUB_USER|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
+    echo "credhub-password: $(bbl --state-dir ${BBL_STATE_PATH} print-env|grep CREDHUB_PASSWORD|cut --delimiter='=' --fields=2)" >> /tmp/${PIPELINE_NAME}-vars.yml
     echo "credhub-proxy-port: 6666" >> /tmp/${PIPELINE_NAME}-vars.yml
 }
 
