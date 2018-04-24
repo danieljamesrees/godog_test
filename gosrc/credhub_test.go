@@ -77,8 +77,8 @@ func LogoutOfCredHub() error {
 }
 
 // Pointers didn't work.
-func CredHubIsInstalled(credHubUrl, credHubUsernameVariable, credHubPasswordVariable string) error {
-    rawCredHubUrl = credHubUrl
+func CredHubIsInstalled(credHubUrlVariable, credHubUsernameVariable, credHubPasswordVariable string) error {
+    rawCredHubUrl = os.Getenv(credHubUrlVariable)
     usernameVariable = credHubUsernameVariable
     passwordVariable = credHubPasswordVariable
 
@@ -169,7 +169,7 @@ func SecretValueShouldBe(expectedSecretValue string) error {
 }
 
 func CredHubFeatureContext(suite *godog.Suite) {
-    suite.Step(`^CredHub is installed at \${(_-a-zA-Z0-9)} with username \${([_-a-zA-Z0-9]*)} and password \${([_-a-zA-Z0-9]*)}$`, CredHubIsInstalled)
+    suite.Step(`^CredHub is installed at \${([_-a-zA-Z0-9]*)} with username \${([_-a-zA-Z0-9]*)} and password \${([_-a-zA-Z0-9]*)}$`, CredHubIsInstalled)
     suite.Step(`^a secret (.*) exists at ([-a-z0-9\/]*)$`, ASecretExists)
     suite.Step(`^I use the CredHub CLI to access CredHub via a proxy$`, AccessCredHub)
     suite.Step(`^the secret value should be (.*)$`, SecretValueShouldBe)
