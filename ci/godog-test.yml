@@ -38,5 +38,4 @@ jobs:
         path: godog-test/ci/scripts/test_buildstack.sh
       params:
         JUMPBOX_ADDRESS: ((jumpbox-address))
-        JUMPBOX_PRIVATE_KEY: ((ssh-key))
         CREDHUB_PROXY_PORT: ((credhub-proxy-port))
