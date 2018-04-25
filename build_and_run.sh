@@ -24,20 +24,6 @@ then
     exit 1
 fi
 
-if [ -z "${CREDHUB_USER}" ]
-then
-    echo Must specify a CredHub username
-    usage
-    exit 1
-fi
-
-if [ -z "${CREDHUB_PASSWORD}" ]
-then
-    echo Must specify a CredHub password
-    usage
-    exit 1
-fi
-
 if [ -z "${CREDHUB_PROXY_PORT}" ]
 then
     CREDHUB_PROXY_PORT="${DEFAULT_CREDHUB_PROXY_PORT}"
