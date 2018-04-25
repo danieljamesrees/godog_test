@@ -67,6 +67,14 @@ init()
         echo Credhub already installed - delete /usr/local/bin/credhub to replace
     fi
 
+    set +x
+    if ! jq --version
+    then
+        echo Installing jq
+        sudo apt-get install --yes jq
+    fi
+    set -x
+
     mkdir -p bin/tests
 #    mkdir --parents bin/tests
 }
