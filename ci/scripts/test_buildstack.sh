@@ -4,6 +4,7 @@ export TERM=dumb &&\
 curl --location --output bbl https://github.com/cloudfoundry/bosh-bootloader/releases/download/v5.11.6/bbl-v5.11.6_linux_x86-64 &&\
 chmod u+x bbl &&\
 sudo mv bbl /usr/local/bin/ &&\
+apk add packagename=jq &&\
 cd buildstack-bbl-state/buildstack-bbl-state &&\
 eval "$(bbl print-env)" &&\
 cd ../.. &&\
