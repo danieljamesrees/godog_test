@@ -7,7 +7,7 @@ sudo mv bbl /usr/local/bin/ &&\
 cd buildstack-bbl-state/buildstack-bbl-state &&\
 eval "$(bbl print-env)" &&\
 cd ../.. &&\
-mkdir ~/.ssh &&\
+mkdir -p ~/.ssh &&\
 chmod u=rwx,go= ~/.ssh &&\
 echo "${JUMPBOX_PRIVATE_KEY}" > ~/.ssh/jumpbox.key &&\
 chmod u=rw,go= ~/.ssh/jumpbox.key &&\
