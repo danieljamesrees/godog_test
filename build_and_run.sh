@@ -93,7 +93,7 @@ setup_credhub()
 #    ssh -o StrictHostKeyChecking=no -fN -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}"
 #      trap "pkill ssh" EXIT
 #    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
-    export https_proxy=${BOSH_ALL_PROXY}
+#    export https_proxy=${BOSH_ALL_PROXY}
 }
 
 clean
@@ -103,4 +103,4 @@ build
 setup_credhub
 
 bin/tests/credhub ${PWD}/src/buildstack/features/credhub.feature
-#bin/tests/jenkins ${PWD}/src/buildstack/features/jenkins.feature
+bin/tests/jenkins ${PWD}/src/buildstack/features/jenkins.feature
