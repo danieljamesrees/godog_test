@@ -94,6 +94,7 @@ setup_credhub()
 #      trap "pkill ssh" EXIT
 #    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
 #    export https_proxy=${BOSH_ALL_PROXY}
+echo Not exporting https_proxy
 }
 
 clean
