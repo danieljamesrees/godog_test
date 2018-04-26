@@ -102,5 +102,5 @@ build
 
 setup_credhub
 
-#bin/tests/credhub ${PWD}/src/buildstack/features/credhub.feature
-bin/tests/jenkins ${PWD}/src/buildstack/features/jenkins.feature
+bin/tests/credhub ${PWD}/src/buildstack/features/credhub.feature
+#bin/tests/jenkins ${PWD}/src/buildstack/features/jenkins.feature
