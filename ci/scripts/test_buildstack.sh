@@ -6,7 +6,7 @@ chmod u+x bbl &&\
 sudo mv bbl /usr/local/bin/ &&\
 apk add jq &&\
 cd buildstack-bbl-state/buildstack-bbl-state &&\
-eval "$(bbl print-env)" &&\
+#eval "$(bbl print-env)" &&\
 cd ../.. &&\
 mkdir -p ~/.ssh &&\
 chmod u=rwx,go= ~/.ssh &&\

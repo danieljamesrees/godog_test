@@ -93,8 +93,7 @@ setup_credhub()
 #    ssh -o StrictHostKeyChecking=no -fN -D ${CREDHUB_PROXY_PORT} jumpbox@${JUMPBOX_ADDRESS} -i "${JUMPBOX_PRIVATE_KEY}"
 #      trap "pkill ssh" EXIT
 #    export CREDHUB_PROXY=socks5://localhost:${CREDHUB_PROXY_PORT}
-#    export https_proxy=${BOSH_ALL_PROXY}
-echo Not exporting https_proxy
+    export https_proxy=${BOSH_ALL_PROXY}
 }
 
 clean
